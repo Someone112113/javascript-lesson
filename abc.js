@@ -1,56 +1,98 @@
-window.onload = () => {
-  var canvas = document.getElementById("canvas");
-  var context = canvas.getContext("2d");
+var player;
+var speed;
+var px;
+var py;
+var t;
+var goUp;
+var goDown;
+var goLeft;
+var goRight;
 
-  context.canvas.height = window.innerHeight * 0.96;
-  context.canvas.width = window.innerWidth * 0.98;
+function preload() {
+  playerImage = loadImage(
+    "https://img.icons8.com/fluency/96/000000/space-shuttle.png"
+  );
+}
 
-  var t = Date.now();
-  var speed = 100; // 100px / second
-  var x1 = 100;
-  var y1 = 100;
-  var x2 = 300;
-  var y2 = 300;
-  var obj = new Line(context, x1, y1, x2, y2);
+function setup() {
+  createCanvas(windowWidth * 0.9, windowHeight * 0.9);
+  speed = 100;
+  px = width / 2;
+  py = height / 2;
+  player = new Player(playerImage, px, py, 50, 50, 0);
+  setupController();
+  t = Date.now();
+}
 
-  draw();
-
-  function draw() {
-    var timePassed = (Date.now() - t) / 1000;
-    t = Date.now();
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    x1 += speed * timePassed;
-
-    if (x1 >= canvas.width) {
-      speed *= -1; // speed = -100
+function draw() {
+  clear();
+  player.draw();
+  player.moveTo(px, py);
+  var timePassed = (Date.now() - t) / 1000;
+  t = Date.now();
+  if (goUp) {
+    py -= speed * timePassed;
+    if (py >= canvas.height) {
+      py = 0;
     }
-    if (x1 <= 0) {
-      speed *= -1; // speed = 100
+  }
+
+  if (goDown) {
+    py += speed * timePassed;
+    if (py <= 0) {
+      py = canvas.height;
     }
-    obj.moveTo(x1, y1);
-    obj.draw();
-    window.requestAnimationFrame(draw);
-  }
-};
-
-class Line {
-  constructor(context1, x1, y1, x2, y2) {
-    this.context1 = context1;
-    this.x1 = x1;
-    this.y1 = y1;
-    this.x2 = x2;
-    this.y2 = y2;
   }
 
-  moveTo(x1, y1) {
-    this.x1 = x1;
-    this.y1 = y1;
+  if (goLeft) {
+    px -= speed * timePassed;
+    if (px <= 0) {
+      px = canvas.width;
+    }
   }
 
-  draw() {
-    this.context1.moveTo(this.x1, this.y1);
-    this.context1.lineTo(this.x2, this.y2);
-    this.context1.lineWidth = 10;
-    this.context1.stroke();
+  if (goRight) {
+    px += speed * timePassed;
+    if (px <= 0) {
+      px = 0;
+    }
   }
+}
+
+function setupController() {
+  window.addEventListener("keydown", function (e) {
+    if (e.key == "ArrowUp") {
+      goUp = true;
+    }
+
+    if (e.key == "ArrowDown") {
+      goDown = true;
+    }
+
+    if (e.key == "ArrowLeft") {
+      goLeft = true;
+    }
+
+    if (e.key == "ArrowRight") {
+      goRight = true;
+    }
+  });
+
+  window.addEventListener("keyup", function (e) {
+    if (e.key == "ArrowUp") {
+      goUp = false;
+    }
+
+    if (e.key == "ArrowDown") {
+      goDown = false;
+    }
+
+    if (e.key == "ArrowLeft") {
+      goLeft = false;
+    }
+
+    if (e.key == "ArrowRight") {
+      goRight = false;
+    }
+  });
 }

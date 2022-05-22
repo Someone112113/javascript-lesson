@@ -1,49 +1,109 @@
-import Line from "./line.js";
-import Circle from "./circle.js";
+var player;
+var playerImage;
+var pSpeed;
+var px;
+var py;
+var shooting;
 
-window.onload = () => {
-  var canvas = document.getElementById("canvas");
-  var context = canvas.getContext("2d");
-  context.canvas.height = window.innerHeight * 0.96;
-  context.canvas.width = window.innerWidth * 0.98;
+var missiles;
+var missileImage;
+var mSpeed;
 
-  var t = Date.now();
-  var speed = 100; // pixels per second
-  var x = 500;
-  var y = 100;
-  var x1 = 300;
-  var y1 = 200;
-  var r = 100;
+var t;
+var keys = [];
 
-  var line = new Line(context, 200, 100, 300, 400);
-  var cir = new Circle(context, x, y, r);
-  var cir1 = new Circle(context, x1, y1, r);
+function preload() {
+  playerImage = loadImage(
+    "https://img.icons8.com/fluency/96/000000/space-shuttle.png"
+  );
+  missileImage = loadImage(
+    "https://img.icons8.com/color/96/000000/missile.png"
+  );
+}
 
-  draw();
+function setup() {
+  createCanvas(windowWidth * 0.9, windowHeight * 0.9);
 
-  function draw() {
-    context.canvas.height = window.innerHeight * 0.96;
-    context.canvas.width = window.innerWidth * 0.98;
-    var timePassed = (Date.now() - t) / 1000;
-    t = Date.now();
+  pSpeed = 100;
+  px = width / 2;
+  py = height / 2;
+  player = new Player(playerImage, px, py, 50, 50, 0, 5);
+  setupController();
 
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    line.draw();
+  mSpeed = 150;
+  missiles = new Missiles(missileImage);
 
-    cir.draw();
-    cir.moveTo(x, y);
+  textSize(30);
+  t = Date.now();
+}
 
-    cir1.draw();
-    cir1.moveTo(x1, y1);
+function draw() {
+  clear();
 
-    x += speed * timePassed;
-    if (x >= canvas.width + r) {
-      x = -r;
+  var timePassed = (Date.now() - t) / 1000;
+  t = Date.now();
+
+  rectMode(CENTER);
+  rect(width / 2, height / 2, 55, 55);
+
+  missiles.draw();
+  missiles.moveMissiles(mSpeed * timePassed);
+
+  player.draw();
+  player.moveTo(px, py);
+
+  // console.log(keys);
+
+  controlPlayerMovement(timePassed);
+}
+
+function controlPlayerMovement(timePassed) {
+  if (keys["KeyW"]) {
+    py -= pSpeed * timePassed;
+    if (py <= 0) {
+      py = height;
     }
-    x1 += (speed + 100) * timePassed; // speed = 200
-    if (x1 >= canvas.width + r) {
-      x1 = -r;
-    }
-    window.requestAnimationFrame(draw);
+    text("up", 10, 30);
   }
-};
+
+  if (keys["KeyS"]) {
+    py += pSpeed * timePassed;
+    if (py >= height) {
+      py = 0;
+    }
+    text("down", 10, 60);
+  }
+
+  if (keys["KeyA"]) {
+    px -= pSpeed * timePassed;
+    if (px <= 0) {
+      px = width;
+    }
+    text("left", 10, 90);
+  }
+
+  if (keys["KeyD"]) {
+    px += pSpeed * timePassed;
+    if (px >= width) {
+      px = 0;
+    }
+    text("right", 10, 120);
+  }
+
+  if (keys["Space"]) {
+    if (player.canShoot(t)) {
+      missiles.createMissile(px, py);
+    }
+    text("shoot", 10, 150);
+  }
+}
+
+function setupController() {
+  window.addEventListener("keydown", function (e) {
+    keys[e.code] = true;
+  });
+
+  window.addEventListener("keyup", function (e) {
+    keys[e.code] = false;
+  });
+}

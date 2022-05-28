@@ -1,7 +1,7 @@
 class Missiles {
   constructor(img) {
     this.img = img;
-    this.missiles = [];
+    this.missiles = []; // array of Missile
   }
 
   createMissile(x, y) {
@@ -11,6 +11,16 @@ class Missiles {
   moveMissiles(distance) {
     this.missiles.forEach((missile) => {
       missile.moveForward(distance);
+    });
+  }
+
+  getMissiles() {
+    return this.missiles;
+  }
+
+  removeMissiles() {
+    this.missiles = this.missiles.filter((missile) => {
+      return !missile.toRemove;
     });
     this.missiles = this.missiles.filter((missile) => {
       return !missile.outOfBorders();

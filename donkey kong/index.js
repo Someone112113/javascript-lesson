@@ -13,6 +13,10 @@ var beams;
 var beamImage;
 var beamData;
 
+var barrel;
+var bYSpeed;
+var bMoveDistance;
+
 var t;
 var keys = [];
 
@@ -59,6 +63,10 @@ function setup() {
   beams = new Beams(beamImage, beamData);
   beams.spawnBeam();
 
+  bMoveDistance = 100;
+  bYSpeed = 0;
+  barrel = new Barrel(100, 100, 30, 30);
+
   textSize(30);
   t = Date.now();
 }
@@ -73,11 +81,19 @@ function draw() {
 
   player.draw();
   if (!player.jumping && player.onTheGround) {
-    pYSpeed = gravity;
+    pYSpeed = 0;
   }
   pYSpeed += gravity;
   player.moveY(pYSpeed * timePassed, beams.getBeams());
   player.moveLeftRight(pMoveDistance, t);
+
+  barrel.draw();
+  if (barrel.onTheGround) {
+    bYSpeed = 0;
+  }
+  bYSpeed += gravity;
+  barrel.moveY(bYSpeed * timePassed, beams.getBeams());
+  barrel.moveLeftRight(bMoveDistance * timePassed, t);
 
   controlPlayerMovement(timePassed);
 }

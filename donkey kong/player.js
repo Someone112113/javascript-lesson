@@ -71,7 +71,7 @@ class Player {
       this.y += distance;
       beams.forEach((beam) => {
         if (beam.touch(this)) {
-          this.y = beam.y - beam.height;
+          this.y = beam.y - beam.height / 2 - this.height / 2;
           this.onTheGround = true;
         }
       });

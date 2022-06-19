@@ -41,7 +41,10 @@ class Player {
   draw() {
     push();
     translate(this.x, this.y);
-    rotate(-Math.PI / 2 + this.rotate);
+    let v1 = createVector(0, this.y);
+    let v2 = createVector(this.x - mouseX, this.y - mouseY);
+    let angleBetween = v1.angleBetween(v2);
+    rotate(-Math.PI / 2 + angleBetween);
     imageMode(CENTER);
     image(this.img, 0, 0, this.width, this.height);
     pop();

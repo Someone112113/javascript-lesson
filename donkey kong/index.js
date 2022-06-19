@@ -35,6 +35,7 @@ function preload() {
     })
     .then((jsondata) => {
       beamData = jsondata.data;
+      console.log(beamData);
     });
 }
 
@@ -52,7 +53,7 @@ function setup() {
     playerImageJumping,
     playerImageDead,
     100,
-    100,
+    500,
     50,
     50,
     500,

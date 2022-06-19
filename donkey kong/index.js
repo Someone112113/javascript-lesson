@@ -17,6 +17,7 @@ var barrels;
 var barrel;
 var bMoveDistance;
 var lastTimeSpawnBarrel;
+var timeBetweenBarrel;
 
 var t;
 var keys = [];
@@ -68,6 +69,7 @@ function setup() {
   bMoveDistance = 100;
   bYSpeed = 0;
   lastTimeSpawnBarrel = 0;
+  timeBetweenBarrel = random(1, 5000);
   barrels = new Barrels(100, 100, 30, 30);
 
   textSize(30);
@@ -95,9 +97,10 @@ function draw() {
   barrels.moveY(timePassed, beams.getBeams());
   barrels.moveLeftRight(bMoveDistance * timePassed, t);
 
-  if (t - this.lastTimeSpawnBarrel >= 2000) {
+  if (t - lastTimeSpawnBarrel >= timeBetweenBarrel) {
     barrels.spawnBarrel();
-    this.lastTimeSpawnBarrel = t;
+    lastTimeSpawnBarrel = t;
+    timeBetweenBarrel = random(1, 5000);
   }
 
   controlPlayerMovement(timePassed);

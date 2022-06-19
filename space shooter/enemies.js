@@ -5,6 +5,7 @@ class Enemies {
     this.lineWidth = lineWidth;
     this.enemyCenter = width / 2;
     this.goLeft = false;
+    this.numEnemiesDestroyed = 0;
   }
 
   spawnEnemy(totalEnemies) {
@@ -22,6 +23,13 @@ class Enemies {
         totalEnemies--;
       }
     }
+  }
+
+  allEnemiesDestroyed() {
+    if (this.enemies.length <= 0) {
+      return true;
+    }
+    return false;
   }
 
   moveEnemies(distance) {
@@ -56,12 +64,20 @@ class Enemies {
       });
     });
 
+    this.numEnemiesDestroyed = destroyedEnemy.length;
+
     this.enemies = this.enemies.filter((enemy) => {
       return !destroyedEnemy.includes(enemy);
       // enemies: a b c d
       // destroyedEnemy: b c
       // !true = false
     });
+  }
+
+  getNumEnemiesDestroyed() {
+    var temp = this.numEnemiesDestroyed;
+    this.numEnemiesDestroyed = 0;
+    return temp;
   }
 
   draw() {

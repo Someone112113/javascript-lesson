@@ -18,6 +18,8 @@ var ey;
 var t;
 var keys = [];
 
+var gameWin = false;
+
 function preload() {
   playerImage = loadImage(
     "https://img.icons8.com/fluency/96/000000/space-shuttle.png"
@@ -44,7 +46,7 @@ function setup() {
 
   eSpeed = 50;
   enemies = new Enemies(enemyImage, 500);
-  enemies.spawnEnemy(30); // 10, 20, 30, etc.
+  enemies.spawnEnemy(10); // 10, 20, 30, etc.
 
   textSize(30);
   t = Date.now();
@@ -69,9 +71,14 @@ function draw() {
   enemies.checkMissiles(missiles.getMissiles());
   enemies.draw();
   enemies.moveEnemies(eSpeed * timePassed);
+  if (enemies.allEnemiesDestroyed() && gameWin == false) {
+    alert("You win");
+    gameWin = true;
+  }
 
   player.draw();
   player.moveTo(px, py);
+  player.addScore(enemies.getNumEnemiesDestroyed());
 
   // console.log(keys);
 
@@ -84,7 +91,7 @@ function controlPlayerMovement(timePassed) {
     if (py <= 0) {
       py = height;
     }
-    text("up", 10, 30);
+    // text("up", 10, 30);
   }
 
   if (keys["KeyS"]) {
@@ -92,7 +99,7 @@ function controlPlayerMovement(timePassed) {
     if (py >= height) {
       py = 0;
     }
-    text("down", 10, 60);
+    // text("down", 10, 60);
   }
 
   if (keys["KeyA"]) {
@@ -100,7 +107,7 @@ function controlPlayerMovement(timePassed) {
     if (px <= 0) {
       px = width;
     }
-    text("left", 10, 90);
+    // text("left", 10, 90);
   }
 
   if (keys["KeyD"]) {
@@ -108,14 +115,14 @@ function controlPlayerMovement(timePassed) {
     if (px >= width) {
       px = 0;
     }
-    text("right", 10, 120);
+    // text("right", 10, 120);
   }
 
   if (keys["Space"]) {
     if (player.canShoot(t) == true) {
       missiles.createMissile(px, py);
     }
-    text("shoot", 10, 150);
+    // text("shoot", 10, 150);
   }
 }
 

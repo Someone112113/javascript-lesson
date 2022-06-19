@@ -7,15 +7,16 @@ var pXSpeed;
 var pYSpeed;
 var pMoveDistance;
 
-const gravity = 20;
+const gravity = 1500;
 
 var beams;
 var beamImage;
 var beamData;
 
+var barrels;
 var barrel;
-var bYSpeed;
 var bMoveDistance;
+var lastTimeSpawnBarrel;
 
 var t;
 var keys = [];
@@ -53,7 +54,7 @@ function setup() {
     playerImageJumping,
     playerImageDead,
     100,
-    500,
+    100,
     50,
     50,
     500,
@@ -66,7 +67,8 @@ function setup() {
 
   bMoveDistance = 100;
   bYSpeed = 0;
-  barrel = new Barrel(100, 100, 30, 30);
+  lastTimeSpawnBarrel = 0;
+  barrels = new Barrels(100, 100, 30, 30);
 
   textSize(30);
   t = Date.now();
@@ -84,17 +86,19 @@ function draw() {
   if (!player.jumping && player.onTheGround) {
     pYSpeed = 0;
   }
-  pYSpeed += gravity;
+  pYSpeed += gravity * timePassed;
   player.moveY(pYSpeed * timePassed, beams.getBeams());
   player.moveLeftRight(pMoveDistance, t);
 
-  barrel.draw();
-  if (barrel.onTheGround) {
-    bYSpeed = 0;
+  barrels.draw();
+  barrels.applyGravity(gravity * timePassed);
+  barrels.moveY(timePassed, beams.getBeams());
+  barrels.moveLeftRight(bMoveDistance * timePassed, t);
+
+  if (t - this.lastTimeSpawnBarrel >= 2000) {
+    barrels.spawnBarrel();
+    this.lastTimeSpawnBarrel = t;
   }
-  bYSpeed += gravity;
-  barrel.moveY(bYSpeed * timePassed, beams.getBeams());
-  barrel.moveLeftRight(bMoveDistance * timePassed, t);
 
   controlPlayerMovement(timePassed);
 }

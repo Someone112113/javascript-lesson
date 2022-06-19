@@ -10,6 +10,7 @@ class Player {
     this.timeBetweenShots = 1000 / shootingSpeed; // 5 missiles per second = 200 milliseconds per missile
     // console.log(this.timeBetweenShots);
     // https://www.indeed.com/career-advice/career-development/how-to-calculate-frequency#:~:text=To%20calculate%20frequency%2C%20divide%20the,receives%203.9%20clicks%20per%20minute.
+    this.score = 0;
   }
 
   moveTo(x, y) {
@@ -38,7 +39,12 @@ class Player {
     }
   }
 
+  addScore(score) {
+    this.score += score * 10;
+  }
+
   draw() {
+    text("Score: " + this.score, 10, 30);
     push();
     translate(this.x, this.y);
     let v1 = createVector(0, this.y);

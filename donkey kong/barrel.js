@@ -8,6 +8,7 @@ class Barrel {
     // this.lastTimeMove = Date.now();
     this.onTheGround = false;
     this.xDirection = 1;
+    this.ySpeed = 0;
   }
 
   moveLeftRight(distance, currentTime) {
@@ -43,13 +44,13 @@ class Barrel {
     }
   }
 
-  moveY(distance, beams) {
+  moveY(timePassed, beams) {
     this.onTheGround = false;
-    if (distance <= 0) {
-      this.y += distance;
+    if (this.ySpeed * timePassed <= 0) {
+      this.y += this.ySpeed * timePassed;
     } else {
       this.jumping = false;
-      this.y += distance;
+      this.y += this.ySpeed * timePassed;
       beams.forEach((beam) => {
         if (beam.touch(this)) {
           this.y = beam.y - beam.height / 2 - this.height / 2;
